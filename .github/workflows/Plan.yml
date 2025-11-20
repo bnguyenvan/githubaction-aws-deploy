@@ -16,6 +16,7 @@ jobs:
   check-pr:
     name: 'Check for Pull Request to Main'
     runs-on: ubuntu-latest
+    environment: test
     if: github.event.workflow_run.conclusion == 'success'
     outputs:
       has-pr-to-main: ${{ steps.check.outputs.has-pr-to-main }}
