@@ -18,7 +18,26 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v5
 
-    - name: Validate
+    - name: Install OpenTofu
       run: |
-        pwd
+        curl --proto '=https' --tlsv1.2 -fsSL https://get.opentofu.org/install-opentofu.sh -o install-opentofu.sh
+        chmod +x install-opentofu.sh
+        ./install-opentofu.sh --install-method standalone --opentofu-version "${{ env.OPENTOFU_VERSION }}"
+        rm install-opentofu.sh
+        tofu --version
+    - name: Validate format and syntax
+      run: |
+        echo "::group::'tofu fmt -check'"
+        tofu fmt -check -recursive
+        echo "::endgroup::"
+        
+        echo "::group::'tofu init' (validation only, not use backend)"
+        tofu init -backend=false
+        echo "::endgroup::"
+        
+        echo "::group::'tofu validate'"
+        tofu validate
+        echo "::endgroup::"
+    - name: Show Downloaded File
+      run: |
         ls -A
