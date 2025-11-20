@@ -7,22 +7,23 @@ permissions:
   contents: read
 
 jobs:
+  build:
+    uses: ./.github/workflows/buildworkflow.yml
+    
   deploy:
     name: 'Deploying'
-
     runs-on: ubuntu-latest
     environment: production
+    needs: build
 
     steps:
     - name: Checkout
       uses: actions/checkout@v5
 
     - name: Download Plan Artifact
-      uses: actions/download-artifact@v5
+      uses: actions/download-artifact@v4
       with:
-        name: testfile-1
-        github-token: ${{ github.token }}
+        name: testfile-${{ needs.build.outputs.run-id }}
+        github-token: ${{ secrets.GITHUB_TOKEN }}
         repository: ${{ github.repository }}
-        run-id: 19521989360
-        # run-id: ${{ github.event.pull_request.head.sha }}
-        # github-token: ${{ secrets.GITHUB_TOKEN }}
+        run-id: ${{ needs.build.outputs.run-id }}
