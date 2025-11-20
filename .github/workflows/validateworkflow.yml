@@ -1,8 +1,8 @@
-name: 'OpenTofu DNS Infrastructure'
+
 
 on:
   push:
-    branches: [ '**' ]
+    branches-ignore: [ 'main' ]
   workflow_dispatch:
 
 permissions:
@@ -11,7 +11,6 @@ permissions:
 jobs:
   validate:
     name: 'Validate'
-    if: github.ref != 'refs/heads/main'
     runs-on: ubuntu-latest
     environment: test
 
