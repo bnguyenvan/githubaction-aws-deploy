@@ -3,7 +3,6 @@
 on:
   push:
     branches-ignore: [ 'main' ]
-  workflow_dispatch:
 
 permissions:
   contents: read
@@ -38,6 +37,3 @@ jobs:
         echo "::group::'tofu validate'"
         tofu validate
         echo "::endgroup::"
-    - name: Show Downloaded File
-      run: |
-        ls -A

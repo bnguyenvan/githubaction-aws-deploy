@@ -3,12 +3,6 @@ name: 'Build'
 on:
   pull_request:
     types: [opened, synchronize, reopened]
-  workflow_dispatch:
-  workflow_call:
-    outputs:
-      run-id:
-        description: "The run ID of the build workflow"
-        value: ${{ jobs.build.outputs.run-id }}
 
 permissions:
   contents: read
