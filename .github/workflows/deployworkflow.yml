@@ -35,7 +35,7 @@ jobs:
     - name: Get PR Number from Merge Commit
       id: pr
       run: echo "pr_number=$(git log -1 --pretty=%B | grep -o '#[0-9]\+' | tr -d \#)" >> $GITHUB_OUTPUT
-      
+
     - name: Download Plan Artifact
       uses: actions/download-artifact@v5
       with:
@@ -46,4 +46,4 @@ jobs:
     - name: Show Downloaded File
       run: |
         ls -A
-        cat testfile-${{ steps.get-run-id.outputs.run-number }}.txt
+        cat testfile-${{ steps.pr.outputs.pr_number }}.txt
