@@ -20,7 +20,7 @@ jobs:
     - name: Download Plan Artifact
       uses: actions/download-artifact@v5
       with:
-        name: testfile-${{ github.run_number }}
+        name: testfile-1
         github-token: ${{ github.token }}
         repository: ${{ github.repository }}
         run-id: 19521989360
