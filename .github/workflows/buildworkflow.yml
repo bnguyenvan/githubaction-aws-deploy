@@ -6,9 +6,7 @@ on:
   workflow_run:
     workflows: ["Validate"] 
     types: [completed]
-    branches:
-      - '**'
-      - '!main'
+    branches-ignore: [ 'main' ]
 
 permissions:
   contents: read
