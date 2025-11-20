@@ -37,6 +37,3 @@ jobs:
         echo "::group::'tofu validate'"
         tofu validate
         echo "::endgroup::"
-    # - name: List File
-    #   run: |
-    #     cat test1.txt
