@@ -19,7 +19,7 @@ permissions:
     - name: Download Plan Artifact
       uses: actions/download-artifact@v5
       with:
-        name: testfile-${{ github.event.number }}
+        name: testfile-${{ github.run_number }}
         github-token: ${{ github.token }}
         github-repository: ${{ github.repository }}
         run-id: ${{ github.event.pull_request.head.sha }}
