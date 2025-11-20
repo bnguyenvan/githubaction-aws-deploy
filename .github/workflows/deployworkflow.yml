@@ -7,23 +7,33 @@ permissions:
   contents: read
 
 jobs:
-  build:
-    uses: ./.github/workflows/buildworkflow.yml
-    
   deploy:
     name: 'Deploying'
     runs-on: ubuntu-latest
     environment: production
-    needs: build
 
     steps:
     - name: Checkout
       uses: actions/checkout@v5
 
+    - name: Get Latest Build Run ID
+      id: get-run-id
+      run: |
+        RUN_ID=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+          "https://api.github.com/repos/${{ github.repository }}/actions/workflows/buildworkflow.yml/runs?status=completed&conclusion=success&per_page=1" \
+          | jq -r '.workflow_runs[0].id')
+        RUN_NUMBER=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+          "https://api.github.com/repos/${{ github.repository }}/actions/workflows/buildworkflow.yml/runs?status=completed&conclusion=success&per_page=1" \
+          | jq -r '.workflow_runs[0].run_number')
+        echo "run-id=$RUN_ID" >> $GITHUB_OUTPUT
+        echo "run-number=$RUN_NUMBER" >> $GITHUB_OUTPUT
+        echo "Latest successful build run ID: $RUN_ID"
+        echo "Latest successful build run number: $RUN_NUMBER"
+
     - name: Download Plan Artifact
       uses: actions/download-artifact@v4
       with:
-        name: testfile-${{ needs.build.outputs.run-id }}
+        name: testfile-${{ steps.get-run-id.outputs.run-number }}
         github-token: ${{ secrets.GITHUB_TOKEN }}
         repository: ${{ github.repository }}
-        run-id: ${{ needs.build.outputs.run-id }}
+        run-id: ${{ steps.get-run-id.outputs.run-id }}
