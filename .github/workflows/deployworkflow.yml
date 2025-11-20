@@ -46,4 +46,4 @@ jobs:
     - name: Show Downloaded File
       run: |
         ls -A
-        cat testfile-${{ steps.pr.outputs.pr_number }}.txt
+        cat testfile.txt
