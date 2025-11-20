@@ -45,6 +45,7 @@ jobs:
     if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
     environment: test
+    needs: validate
     outputs:
       run-id: ${{ github.run_id }}
 
