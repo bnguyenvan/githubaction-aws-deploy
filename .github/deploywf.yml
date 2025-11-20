@@ -1,0 +1,26 @@
+name: 'Deployment'
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+  deploy:
+    name: 'Deploying'
+
+    runs-on: ubuntu-latest
+    environment: production
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v5
+
+    - name: Download Plan Artifact
+      uses: actions/download-artifact@v5
+      with:
+        name: testfile-${{ github.event.number }}
+        github-token: ${{ github.token }}
+        github-repository: ${{ github.repository }}
+        run-id: ${{ github.event.pull_request.head.sha }}
+        # github-token: ${{ secrets.GITHUB_TOKEN }}
