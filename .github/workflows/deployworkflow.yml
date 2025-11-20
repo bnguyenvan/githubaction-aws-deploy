@@ -22,7 +22,7 @@ jobs:
       with:
         name: testfile-${{ github.run_number }}
         github-token: ${{ github.token }}
-        github-repository: ${{ github.repository }}
+        repository: ${{ github.repository }}
         run-id: 19521989360
         # run-id: ${{ github.event.pull_request.head.sha }}
         # github-token: ${{ secrets.GITHUB_TOKEN }}
