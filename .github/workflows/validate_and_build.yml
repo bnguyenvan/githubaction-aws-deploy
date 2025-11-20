@@ -13,7 +13,7 @@ jobs:
   validate:
     name: 'Validate'
     runs-on: ubuntu-latest
-    environment: test
+    environment: production
 
     steps:
     - name: Checkout
@@ -41,11 +41,14 @@ jobs:
         echo "::endgroup::"
 
   build:
-    name: 'Create a file'
-    if: github.event_name == 'pull_request'
+    name: 'OpenTofu Plan'
     runs-on: ubuntu-latest
-    environment: test
     needs: validate
+    if: github.event_name == 'pull_request'
+    environment: production
+    defaults:
+      run:
+        shell: bash
     outputs:
       run-id: ${{ github.run_id }}
 
