@@ -37,3 +37,4 @@ jobs:
         echo "::group::'tofu validate'"
         tofu validate
         echo "::endgroup::"
+        echo "::endgroup::"
