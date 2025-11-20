@@ -1,6 +1,8 @@
 name: 'Deployment'
 
 on:
+  push:
+    branches: [ "main" ]
   workflow_dispatch:
 
 permissions:
@@ -10,7 +12,7 @@ jobs:
   deploy:
     name: 'Deploying'
     runs-on: ubuntu-latest
-    environment: production
+    environment: test
 
     steps:
     - name: Checkout
@@ -33,7 +35,7 @@ jobs:
     - name: Download Plan Artifact
       uses: actions/download-artifact@v4
       with:
-        name: testfile-3
+        name: testfile-${{ steps.pr.outputs.pr_number }}
         github-token: ${{ secrets.GITHUB_TOKEN }}
         repository: ${{ github.repository }}
         run-id: ${{ steps.get-run-id.outputs.run-id }}

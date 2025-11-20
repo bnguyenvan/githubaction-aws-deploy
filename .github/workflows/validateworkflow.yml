@@ -1,0 +1,25 @@
+name: 'OpenTofu DNS Infrastructure'
+
+on:
+  push:
+    branches: [ '**' ]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    name: 'Validate'
+    if: github.ref != 'refs/heads/main'
+    runs-on: ubuntu-latest
+    environment: test
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v5
+
+    - name: Validate
+      run: |
+        pwd
+        ls -A

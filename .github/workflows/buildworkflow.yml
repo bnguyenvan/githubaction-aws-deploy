@@ -1,8 +1,8 @@
 name: 'Build'
 
 on:
-  # push:
-  #   branches: [ "**" ]
+  pull_request:
+    types: [opened, synchronize, reopened]
   workflow_dispatch:
   workflow_call:
     outputs:
@@ -31,5 +31,5 @@ jobs:
     - name: Upload Test File Artifact
       uses: actions/upload-artifact@v4
       with:
-        name: testfile-${{ github.run_number }}
+        name: testfile-${{ steps.pr.outputs.pr_number }}
         path: testfile.txt
