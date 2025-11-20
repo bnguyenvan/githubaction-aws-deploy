@@ -31,5 +31,5 @@ jobs:
     - name: Upload Test File Artifact
       uses: actions/upload-artifact@v4
       with:
-        name: testfile-${{ steps.pr.outputs.pr_number }}
+        name: testfile-${{ github.event.number }}
         path: testfile.txt

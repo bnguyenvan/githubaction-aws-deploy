@@ -39,3 +39,7 @@ jobs:
         github-token: ${{ secrets.GITHUB_TOKEN }}
         repository: ${{ github.repository }}
         run-id: ${{ steps.get-run-id.outputs.run-id }}
+    - name: Show Downloaded File
+      run: |
+        ls -A
+        cat testfile-${{ steps.get-run-id.outputs.run-number }}.txt
