@@ -33,7 +33,7 @@ jobs:
     - name: Download Plan Artifact
       uses: actions/download-artifact@v4
       with:
-        name: testfile-${{ steps.get-run-id.outputs.run-number }}
+        name: testfile-3
         github-token: ${{ secrets.GITHUB_TOKEN }}
         repository: ${{ github.repository }}
         run-id: ${{ steps.get-run-id.outputs.run-id }}
