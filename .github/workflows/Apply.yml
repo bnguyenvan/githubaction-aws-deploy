@@ -17,23 +17,34 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v5
 
-    - name: Get Latest Build Run ID
-      id: get-run-id
-      run: |
-        RUN_ID=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
-          "https://api.github.com/repos/${{ github.repository }}/actions/workflows/buildworkflow.yml/runs?status=completed&conclusion=success&per_page=1" \
-          | jq -r '.workflow_runs[0].id')
-        RUN_NUMBER=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
-          "https://api.github.com/repos/${{ github.repository }}/actions/workflows/buildworkflow.yml/runs?status=completed&conclusion=success&per_page=1" \
-          | jq -r '.workflow_runs[0].run_number')
-        echo "run-id=$RUN_ID" >> $GITHUB_OUTPUT
-        echo "run-number=$RUN_NUMBER" >> $GITHUB_OUTPUT
-        echo "Latest successful build run ID: $RUN_ID"
-        echo "Latest successful build run number: $RUN_NUMBER"
-
     - name: Get PR Number from Merge Commit
       id: pr
       run: echo "pr_number=$(git log -1 --pretty=%B | grep -o '#[0-9]\+' | tr -d \#)" >> $GITHUB_OUTPUT
+
+    - name: Get PR Head SHA
+      id: pr-sha
+      run: |
+        PR_HEAD_SHA=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+          "https://api.github.com/repos/${{ github.repository }}/pulls/${{ steps.pr.outputs.pr_number }}" \
+          | jq -r '.head.sha')
+        echo "head-sha=$PR_HEAD_SHA" >> $GITHUB_OUTPUT
+        echo "PR head SHA: $PR_HEAD_SHA"
+
+    - name: Get Latest Build Run ID for Current PR
+      id: get-run-id
+      run: |
+        # Get all workflow runs for the validate_and_build.yml workflow
+        # Filter by the PR head SHA to get runs specific to this PR
+        RUN_ID=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+          "https://api.github.com/repos/${{ github.repository }}/actions/workflows/validate_and_build.yml/runs?head_sha=${{ steps.pr-sha.outputs.head-sha }}&status=completed&conclusion=success&per_page=1" \
+          | jq -r '.workflow_runs[0].id')
+        RUN_NUMBER=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+          "https://api.github.com/repos/${{ github.repository }}/actions/workflows/validate_and_build.yml/runs?head_sha=${{ steps.pr-sha.outputs.head-sha }}&status=completed&conclusion=success&per_page=1" \
+          | jq -r '.workflow_runs[0].run_number')
+        echo "run-id=$RUN_ID" >> $GITHUB_OUTPUT
+        echo "run-number=$RUN_NUMBER" >> $GITHUB_OUTPUT
+        echo "Latest successful build run ID for PR ${{ steps.pr.outputs.pr_number }}: $RUN_ID"
+        echo "Latest successful build run number for PR ${{ steps.pr.outputs.pr_number }}: $RUN_NUMBER"
 
     - name: Download Plan Artifact
       uses: actions/download-artifact@v5
