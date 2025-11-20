@@ -1,8 +1,14 @@
-name: 'Build'
+name: 'Plan'
 
 on:
-  pull_request:
-    types: [opened, synchronize, reopened]
+  # pull_request:
+  #   types: [opened, synchronize, reopened]
+  workflow_run:
+    workflows: ["Validate"] 
+    types: [completed]
+    branches:
+      - '**'
+      - '!main'
 
 permissions:
   contents: read
@@ -10,6 +16,8 @@ permissions:
 jobs:
   build:
     name: 'Create a file'
+    if: |
+      github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.event == 'pull_request'
     runs-on: ubuntu-latest
     environment: test
     outputs:
